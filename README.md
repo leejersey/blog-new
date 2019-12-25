@@ -3,5 +3,5 @@ blog-new
 
 
 ## 技术栈
-next
-egg
+1. next
+2. egg
