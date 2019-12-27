@@ -1,6 +1,7 @@
 import React,{useState} from 'react'
+import Link from 'next/link'
 import {Row, Col , List ,Icon} from 'antd'
-
+import axios from 'axios';
 import '../static/style/pages/index.css'
 
 import Head from 'next/head'
@@ -9,15 +10,9 @@ import Footer from '../components/Footer'
 import Author from '../components/Author'
 import Advert from '../components/Advert'
 
-const Home = () => {
-  const [ mylist , setMylist ] = useState(
-    [
-      {title:'title1',context:'内容xxxx'},
-      {title:'title2',context:'内容xxxx'},
-      {title:'title3',context:'内容xxxx'},
-      {title:'title4',context:'内容xxxx'},
-    ]
-  )
+const Home = (list) => {
+  const [ mylist , setMylist ] = useState( list.data);
+
   return (
   <div>
     <Head>
@@ -33,13 +28,17 @@ const Home = () => {
             dataSource={mylist}
             renderItem={item => (
               <List.Item>
-                <div className="list-title">{item.title}</div>
-                <div className="list-icon">
-                  <span><Icon type="calendar" /> 2019-06-28</span>
-                  <span><Icon type="folder" /> 视频教程</span>
-                  <span><Icon type="fire" /> 5498人</span>
+                <div className="list-title">
+                  <Link href={{pathname:'/detailed',query:{id:item.id}}}>
+                    <a>{item.title}</a>
+                  </Link>
                 </div>
-                <div className="list-context">{item.context}</div>  
+                <div className="list-icon">
+                  <span><Icon type="calendar" />{item.addTime}</span>
+                  <span><Icon type="folder" />{item.typeName}</span>
+                  <span><Icon type="fire" /> {item.view_count}人</span>
+                </div>
+                <div className="list-context">{item.introduce}</div>  
               </List.Item>
             )}
           />    
@@ -54,6 +53,19 @@ const Home = () => {
     <Footer/>
  </div>
 )
+}
+
+Home.getInitialProps = async ()=>{
+  const promise = new Promise((resolve)=>{
+    axios('http://127.0.0.1:7001/default/getArticleList').then(
+      (res)=>{
+        //console.log('远程获取数据结果:',res.data.data)
+        resolve(res.data)
+      }
+    )
+  })
+
+  return await promise
 }
 
 export default Home

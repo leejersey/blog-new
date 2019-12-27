@@ -1,8 +1,12 @@
 import React,{useState} from 'react'
 import Head from 'next/head'
 import {Row, Col ,Affix, Icon ,Breadcrumb  } from 'antd'
+import axios from 'axios';
 import ReactMarkdown from 'react-markdown'
 import MarkNav from 'markdown-navbar';
+import marked from 'marked'
+import hljs from "highlight.js";
+import 'highlight.js/styles/monokai-sublime.css';
 
 import 'markdown-navbar/dist/navbar.css';
 import Header from '../components/Header'
@@ -46,7 +50,26 @@ let markdown='# P01:课程介绍和环境搭建\n' +
   '>>> cccccccccc\n\n'+
   '``` var a=11; ```'
 
-const Detailed = () => {
+const Detailed = (detail) => {
+  const renderer = new marked.Renderer();
+
+  marked.setOptions({
+      renderer: renderer, 
+      gfm: true,
+      pedantic: false,
+      sanitize: false,
+      tables: true,
+      breaks: false,
+      smartLists: true,
+      smartypants: false,
+      highlight: function (code) {
+              return hljs.highlightAuto(code).value;
+      }
+    }); 
+
+    let html = marked(detail.article_content) 
+  console.log(detail)
+  const [ mydetail , setMydetail ] = useState(detail);
   return (
     <div>
       <Head>
@@ -66,24 +89,16 @@ const Detailed = () => {
 
              <div>
                 <div className="detailed-title">
-                XXXXX
+                {mydetail.title}
                 </div>
                 <div className="list-icon center">
                   <span><Icon type="calendar" /> 2019-06-28</span>
                   <span><Icon type="folder" /> 视频教程</span>
                   <span><Icon type="fire" /> 5498人</span>
                 </div>
-                <Affix offsetTop={5}>
-                  <div className="detailed-nav comm-box">
-                    <div className="nav-title">文章目录</div>
-                    <MarkNav
-                      className="article-menu"
-                      source={markdown}
-                      ordered={false}
-                    />
-                  </div>
-                </Affix>
+                
                 <div className="detailed-content" >
+                    {html}
                     <ReactMarkdown 
                       source={markdown} 
                       escapeHtml={false}  
@@ -96,13 +111,37 @@ const Detailed = () => {
         </Col>
 
         <Col className="comm-right" xs={0} sm={0} md={7} lg={5} xl={4}>
-          <Author />
-          <Advert />
+          <Affix offsetTop={5}>
+            <div className="detailed-nav comm-box">
+              <div className="nav-title">文章目录</div>
+              <MarkNav
+                className="article-menu"
+                source={markdown}
+                ordered={false}
+              />
+            </div>
+          </Affix>
         </Col>
       </Row>
       <Footer/>
    </div>
   )
+}
+
+Detailed.getInitialProps = async(context)=>{
+
+  let id =context.query.id
+  const promise = new Promise((resolve)=>{
+
+    axios('http://127.0.0.1:7001/default/getArticleById/'+id).then(
+      (res)=>{
+        console.log(res)
+        resolve(res.data.data[0])
+      }
+    )
+  })
+
+  return await promise
 }
 
 export default Detailed
