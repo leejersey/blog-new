@@ -31,8 +31,7 @@ class HomeController extends Controller{
 
     async getArticleById(){
         //先配置路由的动态传值，然后再接收值
-        let id = this.ctx.params.id
-        console.log(id);
+        let id = this.ctx.params.id;
 
         let sql = 'SELECT article.id as id,'+
         'article.title as title,'+
@@ -45,10 +44,7 @@ class HomeController extends Controller{
         'FROM article LEFT JOIN type ON article.type_id = type.Id '+
         'WHERE article.id = '+id
 
-
-
         const result = await this.app.mysql.query(sql)
-
 
         this.ctx.body={data:result}
 
