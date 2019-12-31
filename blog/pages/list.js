@@ -1,4 +1,10 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
+import axios from 'axios'
+import  servicePath  from '../config/apiUrl'
+import marked from 'marked'
+import hljs from "highlight.js";
+import 'highlight.js/styles/monokai-sublime.css';
+import Link from 'next/link'
 import Head from 'next/head'
 import {Row, Col , List ,Icon ,Breadcrumb  } from 'antd'
 import Header from '../components/Header'
@@ -9,16 +15,32 @@ import '../static/style/pages/list.css'
 
 
 
-const Home = () =>{
+const ArticleList = (list) =>{
 
-  const [ mylist , setMylist ] = useState(
-    [
-      {title:'title1',context:'内容xxxx'},
-      {title:'title2',context:'内容xxxx'},
-      {title:'title3',context:'内容xxxx'},
-      {title:'title4',context:'内容xxxx'},
-    ]
-  )
+    const renderer = new marked.Renderer();
+
+    marked.setOptions({
+      renderer: renderer,
+      gfm: true,
+      pedantic: false,
+      sanitize: false,
+      tables: true,
+      breaks: false,
+      smartLists: true,
+      smartypants: false,
+      sanitize:false,
+      xhtml: false,
+      highlight: function (code) {
+              return hljs.highlightAuto(code).value;
+      }
+
+    });
+
+  const [ mylist , setMylist ] = useState(list.data);
+
+  useEffect(()=>{
+    setMylist(list.data)
+   })
 
   return (
     <div>
@@ -36,21 +58,28 @@ const Home = () =>{
                 </Breadcrumb>
               </div>
 
-              <List
+               <List
                 itemLayout="vertical"
                 dataSource={mylist}
                 renderItem={item => (
                   <List.Item>
-                    <div className="list-title">{item.title}</div>
-                    <div className="list-icon">
-                      <span><Icon type="calendar" /> 2019-06-28</span>
-                      <span><Icon type="folder" /> 视频教程</span>
-                      <span><Icon type="fire" /> 5498人</span>
+                    <div className="list-title">
+                        <Link href={{pathname:'/detailed',query:{id:item.id}}}>
+                        <a>{item.title}</a>
+                      </Link>
                     </div>
-                    <div className="list-context">{item.context}</div>  
+                    <div className="list-icon">
+                      <span><Icon type="calendar" />{item.addTime}</span>
+                      <span><Icon type="folder" /> {item.typeName}</span>
+                      <span><Icon type="fire" />  {item.view_count}人</span>
+                    </div>
+                    <div className="list-context"
+                      dangerouslySetInnerHTML={{__html:marked(item.introduce)}}
+                    >
+                    </div> 
                   </List.Item>
                 )}
-              />  
+              />   
 
             </div>
         </Col>
@@ -65,6 +94,17 @@ const Home = () =>{
    </div>
   )
 
-} 
+}
 
-export default Home
+ArticleList.getInitialProps = async (context)=>{
+
+  let id =context.query.id
+  const promise = new Promise((resolve)=>{
+    axios(servicePath.getListById+'/'+id).then(
+      (res)=>resolve(res.data)
+    )
+  })
+  return await promise
+}
+
+export default ArticleList

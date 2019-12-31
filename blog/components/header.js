@@ -27,6 +27,7 @@ const Header = () => {
     },[])
     //跳转到列表页
     const handleClick = (e)=>{
+        console.log(e);
         if(e.key==0){
             Router.push('/index')
         }else{
@@ -42,11 +43,11 @@ const Header = () => {
                 <Col  xs={24} sm={24} md={10} lg={13} xl={11}>
                     <span className="header-logo">
                         <Link href={{pathname:'/index'}}>
-                            <a> 技术胖</a>
+                            <a> leejersy</a>
                         </Link>
 
                     </span>
-                    <span className="header-txt">专注前端开发,每年100集免费视频。</span>
+                    <span className="header-txt">专注前端开发。</span>
                 </Col>
 
                 <Col className="memu-div" xs={0} sm={0} md={14} lg={10} xl={7}>
@@ -61,7 +62,7 @@ const Header = () => {
                         {
                            navArray.map((item)=>{
                             return(
-                                <Menu.Item key={item.Id}>
+                                <Menu.Item key={item.id}>
                                     <Icon type={item.icon} />
                                     {item.typeName}
                                 </Menu.Item>

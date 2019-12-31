@@ -2,6 +2,9 @@ import React,{useState} from 'react'
 import Link from 'next/link'
 import {Row, Col , List ,Icon} from 'antd'
 import axios from 'axios';
+import marked from 'marked'
+import hljs from "highlight.js";
+import 'highlight.js/styles/monokai-sublime.css';
 import '../static/style/pages/index.css'
 
 import Head from 'next/head'
@@ -13,6 +16,24 @@ import Advert from '../components/Advert'
 import  servicePath  from '../config/apiUrl'
 
 const Home = (list) => {
+  const renderer = new marked.Renderer();
+
+  marked.setOptions({
+    renderer: renderer,
+    gfm: true,
+    pedantic: false,
+    sanitize: false,
+    tables: true,
+    breaks: false,
+    smartLists: true,
+    smartypants: false,
+    sanitize:false,
+    xhtml: false,
+    highlight: function (code) {
+            return hljs.highlightAuto(code).value;
+    }
+
+  });
   const [ mylist , setMylist ] = useState( list.data);
 
   return (
@@ -40,7 +61,10 @@ const Home = (list) => {
                   <span><Icon type="folder" />{item.typeName}</span>
                   <span><Icon type="fire" /> {item.view_count}人</span>
                 </div>
-                <div className="list-context">{item.introduce}</div>  
+                <div className="list-context"
+                      dangerouslySetInnerHTML={{__html:marked(item.introduce)}}
+                >
+                </div>  
               </List.Item>
             )}
           />    
