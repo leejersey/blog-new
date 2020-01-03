@@ -64,7 +64,7 @@ const Home = (list) => {
                 <div className="list-context"
                       dangerouslySetInnerHTML={{__html:marked(item.introduce)}}
                 >
-                </div>  
+                </div> 
               </List.Item>
             )}
           />    
