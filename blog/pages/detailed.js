@@ -30,9 +30,7 @@ const Detailed = (props) =>{
     };
 
   marked.setOptions({
-
     renderer: renderer,
-
     gfm: true,
     pedantic: false,
     sanitize: false,
@@ -40,19 +38,13 @@ const Detailed = (props) =>{
     breaks: false,
     smartLists: true,
     smartypants: false,
-
     highlight: function (code) {
-            return hljs.highlightAuto(code).value;
+        return hljs.highlightAuto(code).value;
     }
 
   }); 
 
-
-
-    let html = marked(props.article_content) 
-
-
-
+  let html = marked(props.article_content) 
 
   return (
     <div>
