@@ -7,11 +7,8 @@ import axios from 'axios'
 import  servicePath  from '../config/apiUrl'
 
 const Header = () => {
-
-
     const [navArray , setNavArray] = useState([])
     useEffect(()=>{
-
         const fetchData = async ()=>{
            const result= await axios(servicePath.getTypeInfo).then(
                 (res)=>{
@@ -22,8 +19,6 @@ const Header = () => {
            setNavArray(result)
         }
         fetchData()
-
-
     },[])
     //跳转到列表页
     const handleClick = (e)=>{
@@ -33,8 +28,6 @@ const Header = () => {
         }else{
             Router.push('/list?id='+e.key)
         }
-
-
     }
 
     return (
@@ -45,13 +38,11 @@ const Header = () => {
                         <Link href={{pathname:'/index'}}>
                             <a> leejersy</a>
                         </Link>
-
                     </span>
                     <span className="header-txt">专注前端开发。</span>
                 </Col>
-
                 <Col className="memu-div" xs={0} sm={0} md={14} lg={10} xl={7}>
-                    <Menu  
+                    <Menu
                       mode="horizontal"
                       onClick={handleClick}
                     >
@@ -67,7 +58,7 @@ const Header = () => {
                                     {item.typeName}
                                 </Menu.Item>
                             )
-                           }) 
+                           })
                         }
                     </Menu>
                 </Col>
