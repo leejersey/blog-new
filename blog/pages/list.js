@@ -13,12 +13,8 @@ import Advert from '../components/Advert'
 import Footer from '../components/Footer'
 import '../static/style/pages/list.css'
 
-
-
 const ArticleList = (list) =>{
-
     const renderer = new marked.Renderer();
-
     marked.setOptions({
       renderer: renderer,
       gfm: true,
@@ -33,7 +29,6 @@ const ArticleList = (list) =>{
       highlight: function (code) {
               return hljs.highlightAuto(code).value;
       }
-
     });
 
   const [ mylist , setMylist ] = useState(list.data);
@@ -57,7 +52,6 @@ const ArticleList = (list) =>{
                   <Breadcrumb.Item>视频列表</Breadcrumb.Item>
                 </Breadcrumb>
               </div>
-
                <List
                 itemLayout="vertical"
                 dataSource={mylist}
@@ -76,28 +70,24 @@ const ArticleList = (list) =>{
                     <div className="list-context"
                       dangerouslySetInnerHTML={{__html:marked(item.introduce)}}
                     >
-                    </div> 
+                    </div>
                   </List.Item>
                 )}
-              />   
-
+              />
             </div>
         </Col>
-
         <Col className="comm-right" xs={0} sm={0} md={7} lg={5} xl={4}>
           <Author />
           <Advert />
         </Col>
       </Row>
       <Footer/>
-
    </div>
   )
 
 }
 
 ArticleList.getInitialProps = async (context)=>{
-
   let id =context.query.id
   const promise = new Promise((resolve)=>{
     axios(servicePath.getListById+'/'+id).then(
