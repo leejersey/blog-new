@@ -44,7 +44,19 @@ module.exports = appInfo => {
 　};
 
   config.cors = {
-    origin: 'http://localhost:3000', //只允许这个域进行访问接口
+    origin: ctx => {
+      const whiteList = [
+        'http://localhost:3000',
+        'http://localhost:8001',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:8001',
+      ];
+      const origin = ctx.request.header.origin;
+      if (whiteList.includes(origin)) {
+        return origin;
+      }
+      return 'http://localhost:3000'; // 默认回退
+    },
     credentials: true,   // 开启认证
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
   };

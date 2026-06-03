@@ -1,0 +1,19 @@
+.markdown-content {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+}
+.show-html,
+.introduce-html {
+  padding: 10px;
+  background-color: #fcfcfc;
+  border: 1px solid #d9d9d9;
+  height: 745px;
+  overflow-y: auto;
+  border-radius: 4px;
+}
+.introduce-html {
+  height: 200px;
+}
+.date-select {
+  margin-top: 20px;
+}
